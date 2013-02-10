@@ -8,6 +8,10 @@ Requires at least: 3.0
 
 Tested up to: 3.5
 
+== Donation ==
+
+http://chrislema.com/want-to-make-a-small-donation/
+
 == Description ==
 
 Creates a new kind of product (sponsorship product) for WooCommerce that allows you to gather sponsors and charge them when your product minimum is met. It only works with Stripe. Not Paypal.
