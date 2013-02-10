@@ -1,7 +1,11 @@
 === WooSponsorship ===
+
 Contributors: chrislema & jdkussow
+
 Tags: woocommerce, woocommerce extension, kickstarter, stripe 
+
 Requires at least: 3.0
+
 Tested up to: 3.5
 
 == Description ==
