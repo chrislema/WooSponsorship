@@ -1,0 +1,227 @@
+body #wrapper #content .products .product .button.add_to_cart_button.product_type_sponsorship-project,
+body #wrapper #content .products .product .button.add_to_cart_button.product_type_sponsorship-project:visited { 
+	display: none; 
+}
+
+.sp-progress {
+
+}
+
+.sp-progress-bar {
+	height: 8px;
+	border: 1px solid #aaaaaa;
+	margin: 8px 4px;
+	width: auto;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;	
+}
+
+.sp-progress-bar-percent {
+	height: 8px;
+	background-color: #4AB915;
+}
+
+.sp-price { 
+	display: table;
+	text-transform: uppercase;
+	width: 100%;
+	overflow: hidden;
+	font-size: 10px;
+	color: #555555;
+	border: none;
+	text-align: left;
+}
+
+.sp-price-col {
+	line-height: 17px;
+	display: table-cell;
+	float: left;
+	white-space: nowrap;
+	vertical-align: baseline;
+	text-align: left;
+	width: 33%;
+}
+
+.sp-price-col strong {
+	display: block;
+	color: #666666;
+	font-weight: bold;
+	font-size: 11px;
+	line-height: 11px;
+	margin: 0;
+	padding-top: 2px;
+}
+
+.sp-level {
+	display: block;
+	width: auto;
+	border: 1px solid #ccc;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	cursor: pointer;
+	margin-bottom: 8px;
+}
+
+.sp-level:hover,
+.sp-level:active {
+	text-decoration: none;
+	color: #555555;
+	border: 1px solid #aaa;
+}
+
+.sp-level-title {
+	padding: 4px;
+	background-color: #e6e6e6;
+	font-size: 16px;
+	font-weight: 700;
+}
+
+.sp-level-amount {
+	float: right;
+}
+
+.sp-level-description {
+	padding: 4px;
+}
+
+#main-sidebar-container #sidebar.wc-sponsorship-hidden {
+	display: none;
+}
+
+.sp-widget-levels { }
+.sp-widget-levels .sp-widget-level {
+	display: block;
+	width: auto;
+	cursor: pointer;
+	background-color: #eeeeee;
+	border-top: 1px solid #d5d5d5;
+	color: #666666;
+	font-size: 12px;
+	overflow: hidden;
+	padding: 19px 15px 9px 20px;
+	word-wrap: break-word;
+	/*border: 1px solid #ccc;
+	border-radius: 3px;
+	-moz-border-radius: 3px;
+	-webkit-border-radius: 3px;
+	margin-bottom: 8px;*/
+}
+
+.sp-widget-levels .sp-widget-level:hover,
+.sp-widget-levels .sp-widget-level:active {
+	text-decoration: none;
+	background-color: #e0e0e0;	
+	/*color: #555555;
+	border: 1px solid #aaa;*/
+}
+
+.sp-widget-levels .sp-widget-level-title {
+	color: #333333;
+	font-size: 16px;
+	font-weight: bold;
+	line-height: 23px;
+	margin-bottom: 4px;
+	padding: 3px 0;	
+	/*padding: 4px;
+	background-color: #e6e6e6;
+	font-size: 16px;
+	font-weight: 700;*/
+}
+
+.sp-widget-levels .sp-widget-level-amount {
+	float: right;
+}
+
+.sp-widget-levels .sp-widget-level-description {
+	margin-bottom: 10px;
+}
+
+.sp-widget-levels .sp-widget-level-description p {
+	line-height: 1.5em;
+	font-size: 14px;
+}
+
+.sp-widget-stats { 
+	background-color: #eeeeee;
+}
+.sp-project-stats { 
+	padding: 20px;
+}
+.sp-widget-stats h5 {
+	color: #333333;
+	font-size: 14px;
+	font-weight: bold;
+	margin-bottom: 5px;
+	text-transform: lowercase;
+}
+.sp-project-stats .num { 
+	display: block;
+	font-size: 48px;
+	font-weight: bold;
+	line-height: 45px;
+}
+.sp-project-status .text { }
+.sp-project-backers { }
+.sp-project-backers-label { }
+.sp-project-backers-value { }
+.sp-project-pledged { }
+.sp-project-pledged-value { }
+.sp-project-duration { }
+.sp-project-duration-value { }
+.sp-project-duration-label { }
+.sp-project-contribute { 
+	-moz-box-orient: vertical;
+	display: inline-block;
+	margin-top: -10px;
+	padding: 0 0 0 20px;
+	vertical-align: middle;
+}
+.sp-project-notice { }
+.sp-project-goal { }
+.sp-project-goal div { 
+	margin-top: 0;
+	padding: 12px 20px 14px;
+}
+.sp-project-goal div p { 
+	color: #666666;
+	font-size: 12px;
+	margin-bottom: 0;
+	line-height: 1.5em;
+}
+#sp-project-min-pledge-button { 
+	background-color: #87c442;
+	box-orient: vertical;
+	-moz-box-orient: vertical;
+	-webkit-box-orient: vertical;
+	border-radius: 5px;
+	-moz-border-radius: 5px;
+	-webkit-border-radius: 5px;
+	display: inline-block;
+	font-size: 18px;
+	padding: 12px 25px;
+	text-align: center;
+	text-transform: none;
+	vertical-align: middle;
+	width: 190px;
+	color: #ffffff;
+	cursor: pointer;
+	white-space: nowrap;
+	text-decoration: none;
+}
+#sp-project-min-pledge-button:hover,
+#sp-project-min-pledge-button:active {
+	background-color: #77b036;
+	border-color: #6ba13c;
+	color: #ffffff;
+	text-decoration: none;
+}
+#sp-project-min-pledge-button small {
+	color: #497323;
+	display: block;
+	font-size: 12px;
+	font-weight: normal;
+	line-height: 12px;
+	margin: 5px 0;
+}

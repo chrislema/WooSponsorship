@@ -1,0 +1,155 @@
+/* 
+    Document   : admin
+    Created on : Jul 31, 2012, 9:56:38 PM
+    Author     : jd
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+root { 
+    display: block;
+}
+
+.wc-sponsorship-fix:after { 
+	content: " "; 
+	display: block; 
+	height: 0; 
+	clear: both; 
+	visibility: hidden; 
+}
+
+.woocommerce_options_panel .nomargin { margin: 0; }
+.woocommerce_options_panel .nomargintop { margin-top: 0; }
+.woocommerce_options_panel .nomarginbottom { margin-bottom: 0; }
+
+.woocommerce_options_panel .autowidth{
+	width: auto;
+	margin-right: 12px;
+}
+
+.woocommerce_options_panel .nolabel {
+	margin-left: 150px;
+}
+
+.sponsorship_tab {
+	line-height: 16px;
+}
+
+.level-delete-button,
+#sponsorship_level_add {
+	cursor: pointer;
+}
+
+.form-field._levels_field {
+	margin-top: 9px;
+	padding: 5px 9px;
+}
+
+.sponsorship_levels_field {
+	padding: 5px 9px;
+	margin: 9px 0;
+	font-size: 12px;
+	line-height: 24px;
+}
+
+.woocommerce_options_panel .levels {
+	float: left;
+	width: 70%;
+	list-style: none;
+	margin-top: 0;
+}
+
+.woocommerce_options_panel .level {
+	list-style-type: none;
+	overflow: hidden;	
+}
+
+.level table {
+  border-spacing: 0;
+  border-style: solid;
+  border-width: 1px;
+  border-color: #DFDFDF;
+  background-color: #F9F9F9;
+  margin: 0;
+  width: 100%;
+}
+
+.level th.left, #postcustomstuff td.left {
+  width: 38%;
+}
+
+.level thead th {
+  background-color: #F1F1F1;
+  padding: 5px 8px 8px;
+}
+
+.level thead th.level-title {
+	padding: 3px;
+	background-color: #ddd;
+}
+
+.level thead th.level-title input {
+	font-size: 18px;
+	font-weight: normal;
+	margin: 0;
+	width: 80%;
+}
+
+.level thead th.level-title span {
+	width: 20%;
+	color: #555555;
+	line-height: 27px;
+}
+
+.level thead th label {
+	float: none;
+}
+
+.level td {
+  vertical-align: top;
+}
+
+.level table input, 
+.level table select, 
+.level table textarea {
+  margin: 8px 0 8px 8px;
+  width: 95%;
+}
+
+.level table textarea {
+	height: 60px;
+}
+
+.level-submit input[type="submit"] {
+	border-radius: 11px;
+}
+
+.add-level-button {
+	text-align: right;
+}
+
+#_sponsorship_end_date .ui-state-active {
+	border-color: #4AB915;
+}
+
+#sponsorship-progress {
+	height: 14px;
+	border: 1px solid #aaaaaa;
+	margin-left: 160px;
+	margin-bottom: 12px;
+	width: 20%;
+	border-radius: 4px;
+	-moz-border-radius: 4px;
+	-webkit-border-radius: 4px;
+	display: inline-block;
+}
+
+#sponsorship-progress-percent {
+	height: 14px;
+	background-color: #4AB915;
+	width: 0%;
+}
+
+.sponsorship-progress-desc {
+	vertical-align: top
+}
