@@ -2,10 +2,10 @@
 /*
   Plugin Name: WooCommerce Sponsorship Add-On
   Plugin URI: http://woothemes.com/woocommerce
-  Description: Extends WooCommerce to provide projects that can be sponsored. Requires WooCommerce 1.5.6+
+  Description: Extends WooCommerce to provide projects that can be sponsored. Requires WooCommerce 1.6+
   Version: 1.0
   Author: Justin Kussow (jdkussow@gmail.com) and Chris Lema (cflema@gmail.com)
-  Author URI: http://www.woothemes.com
+  Author URI: http://www.chrislema.com
 
   Copyright: © 2009-2012 WooThemes.
   License: GNU General Public License v3.0
