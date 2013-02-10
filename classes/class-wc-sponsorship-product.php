@@ -61,6 +61,7 @@ class WC_Sponsorship_Product {
 			if ( !isset( $data[ 'end' ][ 'days' ] ) ) $data[ 'end' ][ 'days' ] = 0;
 			if ( !isset( $data[ 'end' ][ 'date' ] ) ) $data[ 'end' ][ 'date' ] = '';
 			if ( !isset( $data[ 'goal' ] ) ) $data[ 'goal' ] = 0;
+			if ( !isset( $data[ 'end' ][ 'time' ] ) ) $data[ 'end' ][ 'time' ] = '';
 		}
 
 		$progress = $progress_percent = 0;
@@ -318,7 +319,7 @@ class WC_Sponsorship_Product {
 	 * saves the data inputed into the product boxes into a serialized array
 	 */
 	function product_save_data() {
-		global $post, $wpdb;
+		global $post;
 
 		// get data from POST
 		$sponsorship = $_POST[ '_sponsorship' ];
@@ -433,7 +434,7 @@ class WC_Sponsorship_Product {
 	}
 
 	function product_price_html( $price, $product ) {
-		if ( !is_object( $product ) ) $product = new WC_Product( $product );
+		if ( !is_object( $product ) ) $product = new WC_Product_Variable( $product );
 
 		if ( WC_Sponsorship::is_sponsorship( $product ) ) {
 			if ( is_admin() ) {
@@ -450,7 +451,7 @@ class WC_Sponsorship_Product {
 	function product_admin_price_string( $product ) {
 		global $post;
 
-		if ( !is_object( $product ) ) $product = new WC_Product( $product );
+		if ( !is_object( $product ) ) $product = new WC_Product_Variable( $product );
 
 		if ( !WC_Sponsorship::is_sponsorship( $product ) ) return null;
 
@@ -482,7 +483,7 @@ class WC_Sponsorship_Product {
 	}
 
 	function filter_product_visibility( $visible, $product ) {
-		if ( !is_object( $product ) ) $product = new WC_Product( $product );
+		if ( !is_object( $product ) ) $product = new WC_Product_Variable( $product );
 
 		if ( !WC_Sponsorship::is_sponsorship( $product ) ) return $visible;
 
@@ -497,7 +498,7 @@ class WC_Sponsorship_Product {
 	function product_frontend_price_string( $product ) {
 		global $post;
 
-		if ( !is_object( $product ) ) $product = new WC_Product( $product );
+		if ( !is_object( $product ) ) $product = new WC_Product_Variable( $product );
 
 		if ( !WC_Sponsorship::is_sponsorship( $product ) ) return;
 
@@ -579,7 +580,7 @@ class WC_Sponsorship_Product {
 	function product_frontend_styling() {
 		global $post, $product;
 
-		if ( !is_object( $product ) ) $product = new WC_Product( $post->ID );
+		if ( !is_object( $product ) ) $product = new WC_Product_Variable( $post->ID );
 
 		if ( !WC_Sponsorship::is_sponsorship( $product ) ) return;
 
@@ -612,7 +613,7 @@ class WC_Sponsorship_Product {
 		<div class="sp-levels">
 			<?php
 			foreach ( $levels as $level ) :
-				$level_product = new WC_Product( $level->ID );
+				$level_product = new WC_Product_Variation( $level->ID );
 				$level_data = get_post_custom( $level->ID );
 				?>
 				<form id="level-<?php echo $level->ID; ?>-form" enctype="multipart/form-data" method="post" class="cart" action="<?php echo $level_product->add_to_cart_url(); ?>">
@@ -647,7 +648,7 @@ class WC_Sponsorship_Product {
 
 	public static function get_contribution_level_title( $product ) {
 		if ( !is_object( $product ) ) {
-			$product = new WC_Product( $product );
+			$product = new WC_Product_Variable( $product );
 		}
 
 		$title = $product->post->post_title;
@@ -659,26 +660,11 @@ class WC_Sponsorship_Product {
 	}
 
 	public static function is_sponsorship( $product ) {
-		if ( !is_object( $product ) ) {
-			$product = new WC_Product( $product );
-		}
-		return ( $product->is_type( 'sponsorship-project' ) ) ? true : false;
+		return WC_Sponsorship::is_sponsorship( $product );
 	}
 
 	public static function is_sponsorship_contribution_level( $product ) {
-		if ( !is_object( $product ) ) {
-			$product = new WC_Product( $product );
-		}
-
-		$prod_post = $product->post;
-		if ( !$prod_post ) {
-			$prod_post = get_post( $product->id );
-		}
-
-		if ( $prod_post->post_parent ) {
-			return WC_Sponsorship_Product::is_sponsorship( $prod_post->post_parent );
-		}
-		return false;
+		return WC_Sponsorship::is_sponsorship_contribution_level( $product );
 	}
 
 	public static function check_project_progress( $project_id ) {
@@ -719,8 +705,6 @@ where pm.meta_key = '_sponsorship_project' and pm.meta_value = %d
 	}
 
 	public static function check_project_duedate( $project_id ) {
-		global $post;
-
 		$data = get_post_meta( $project_id, '_sponsorship', true );
 
 		$days_left = 0;

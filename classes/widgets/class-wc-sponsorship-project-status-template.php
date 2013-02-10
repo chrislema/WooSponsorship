@@ -2,7 +2,7 @@
 global $post, $product, $wpdb;
 
 if ( !is_object( $product ) ) {
-	$product = new WC_Product( $product );
+	$product = new WC_Product_Variable( $product );
 }
 
 if ( !WC_Sponsorship::is_sponsorship( $product ) ) {
@@ -59,7 +59,7 @@ $min_level_id = $wpdb->get_var( $wpdb->prepare("
 	limit 1;
 	", $product->id ) );
 if ( $min_level_id ) {
-	$min_level = new WC_Product( $min_level_id );
+	$min_level = new WC_Product_Variation( $min_level_id );
 	$min_level_data = get_post_custom( $min_level_id );
 }
 ?>

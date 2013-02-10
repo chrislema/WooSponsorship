@@ -18,7 +18,7 @@ class WC_Sponsorship_Checkout {
 
 	function get_product_title_for_checkout( $title, $product ) {
 		if ( !is_object( $product ) ) {
-			$product = new WC_Product( $product );
+			$product = new WC_Product_Variable( $product );
 		}
 
 		if ( WC_Sponsorship_Product::is_sponsorship_contribution_level( $product ) ) {

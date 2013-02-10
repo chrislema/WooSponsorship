@@ -119,14 +119,18 @@ if ( is_woocommerce_active() ) {
 
 		function is_sponsorship( $product ) {
 			if ( !is_object( $product ) ) {
-				$product = new WC_Product( $product );
+				$product = new WC_Product_Variable( $product );
+			}
+			if ( $product->is_type('variable') || $product->is_type('simple') ) {
+				$pm = get_post_meta( $product->id, '_sponsorship', true );
+				return is_array( $pm );
 			}
 			return ( $product->is_type( 'sponsorship-project' ) ) ? true : false;
 		}
 
 		function is_sponsorship_contribution_level( $product ) {
 			if ( !is_object( $product ) ) {
-				$product = new WC_Product( $product );
+				$product = new WC_Product_Variable( $product );
 			}
 
 			$prod_post = $product->post;
