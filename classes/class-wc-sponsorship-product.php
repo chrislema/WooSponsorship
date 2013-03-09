@@ -23,11 +23,15 @@ class WC_Sponsorship_Product {
 		} else {
 			add_action( 'wp_head', array( &$this, 'product_frontend_styling' ) );
 			// add_action( 'woocommerce_sponsorship-project_add_to_cart', array( &$this, 'add_sponsorship_project_to_cart' ) );
+			add_action( 'woocommerce_before_add_to_cart_form', array( &$this, 'before_add_to_cart' ) );
+			add_action( 'woocommerce_after_add_to_cart_form', array( &$this, 'after_add_to_cart' ) );
+			
 			add_filter( 'woocommerce_product_is_visible', array( &$this, 'filter_product_visibility' ), 10, 3 );
 		}
 
 		add_filter( 'woocommerce_get_price_html', array( &$this, 'product_price_html' ), 10, 2 );
 		add_filter( 'woocommerce_price_html', array( &$this, 'product_price_html' ), 10, 2 );
+		add_filter( 'woocommerce_product_class', array( &$this, 'filter_product_class' ), 10, 4 );
 	}
 
 	function add_product_type( $var, $attr, $content = null ) {
@@ -35,6 +39,22 @@ class WC_Sponsorship_Product {
 		return $var;
 	}
 
+	function filter_product_class( $classname, $product_type, $post_type, $product_id ) {
+		if ( WC_Sponsorship::is_sponsorship( $product_id ) ) {
+			return 'variable';
+		}
+		return $classname;
+		//return (WC_Sponsorship::is_sponsorship( $product_id ) ? 'variable' : $classname );
+	}
+	
+	function before_add_to_cart() {
+		echo '<div style="display: none;">';
+	}
+	
+	function after_add_to_cart() {
+		echo '</div>';
+	}
+	
 	/**
 	 * adds a new tab to the product interface
 	 */

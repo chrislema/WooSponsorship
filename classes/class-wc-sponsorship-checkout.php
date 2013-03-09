@@ -35,8 +35,8 @@ class WC_Sponsorship_Checkout {
 
 		$projects = array();
 		foreach ( $order->get_items() as $order_item ) {
-			if ( WC_Sponsorship_Product::is_sponsorship_contribution_level( $order_item[ 'id' ] ) ) {
-				$cl = get_post( $order_item['id'] );
+			if ( WC_Sponsorship_Product::is_sponsorship_contribution_level( $order_item['product_id'] ) ) {
+				$cl = get_post( $order_item['product_id'] );
 				if ( !in_array( $cl->post_parent, $projects ) ) {
 					$projects[] = $cl->post_parent;
 				}

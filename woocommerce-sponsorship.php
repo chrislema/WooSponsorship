@@ -15,7 +15,8 @@
 /**
  * Required functions
  * */
-if ( !function_exists( 'is_woocommerce_active' ) ) require_once( 'woo-includes/woo-functions.php' );
+if ( ! function_exists( 'is_woocommerce_active' ) )
+	require_once( 'woo-includes/woo-functions.php' );
 
 if ( is_woocommerce_active() ) {
 
@@ -29,10 +30,9 @@ if ( is_woocommerce_active() ) {
 		public static $name = 'sponsorship';
 
 		function __construct() {
-
 			// Include required functions and classes
 			$this->includes();
-
+			
 			if ( is_admin() ) {
 				// add admin styles and scripts
 				add_action( 'woocommerce_admin_css', array( &$this, 'admin_styles' ) );
@@ -45,7 +45,7 @@ if ( is_woocommerce_active() ) {
 
 			add_filter( 'add_to_cart_redirect', array( &$this, 'add_product_redirect' ) );
 			add_filter( 'woocommerce_add_to_cart_validation', array( &$this, 'add_product_validation' ), 10, 3 );
-
+			
 			// some sidebar stuff
 			add_action( 'wp_head', create_function( "", 'ob_start();' ) );
 			add_action( 'get_sidebar', array( &$this, 'get_wc_sponsorship_sidebar' ) );

@@ -121,7 +121,8 @@ class WC_Gateway_Stripe_Sponsorship extends WC_Gateway_Stripe {
 	   global $woocommerce;
 
 	   $order_items = $order->get_items();
-	   $product = $order->get_product_from_item( $order_items[0] );
+	   $firstItem = reset( $order_items );
+	   $product = get_product( $firstItem['product_id'] );
 	   $sponsorship_name = sprintf( __( 'Sponsorship for "%s"', 'wc_stripe' ), $product->get_title() ) . ' ' . sprintf( __( '(Order %s)', 'wp_stripe' ), $order->get_order_number() );
 
 	   if ( $amount * 100 < 50 ) 

@@ -17,7 +17,7 @@ do_action( 'woocommerce_before_add_to_cart_button' );
 	<div class="sp-widget-levels">
 		<?php
 		foreach ( $levels as $level ) :
-			$level_product = new WC_Product_Variation( $level->ID );
+			$level_product = new WC_Product_Simple( $level->ID );
 			$level_data = get_post_custom( $level->ID );
 			?>
 			<form id="level-<?php echo $level->ID; ?>-form" enctype="multipart/form-data" method="post" class="cart" action="<?php echo $level_product->add_to_cart_url(); ?>">

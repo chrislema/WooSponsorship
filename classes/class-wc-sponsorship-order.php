@@ -40,7 +40,7 @@ class WC_Sponsorship_Order {
 		$contains_contribution = false;
 
 		foreach ( $order->get_items() as $order_item ) {
-			if ( WC_Sponsorship_Product::is_sponsorship_contribution_level( $order_item['id'] ) ) {
+			if ( WC_Sponsorship_Product::is_sponsorship_contribution_level( $order_item['product_id'] ) ) {
 				$contains_contribution = true;
 				break;
 			}
