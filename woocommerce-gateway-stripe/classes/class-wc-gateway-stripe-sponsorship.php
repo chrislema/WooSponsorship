@@ -80,7 +80,8 @@ class WC_Gateway_Stripe_Sponsorship extends WC_Gateway_Stripe {
 					$order->update_status('on-hold', 'Awaiting the sponsorship project\'s goal to be met.');
 
 					// Empty awaiting payment session
-					unset($_SESSION['order_awaiting_payment']);
+					if ( defined( $_SESSION ) && array_key_exists( 'order_awaiting_payment', $_SESSION ) )
+						unset( $_SESSION['order_awaiting_payment'] );
 
 					// Remove cart
 					$woocommerce->cart->empty_cart();

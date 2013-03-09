@@ -27,6 +27,7 @@ class WC_Sponsorship_Product {
 			add_action( 'woocommerce_after_add_to_cart_form', array( &$this, 'after_add_to_cart' ) );
 			
 			add_filter( 'woocommerce_product_is_visible', array( &$this, 'filter_product_visibility' ), 10, 3 );
+			add_filter( 'woocommerce_add_to_cart_handler', array( &$this, 'filter_add_to_cart_handler' ), 10, 2);
 		}
 
 		add_filter( 'woocommerce_get_price_html', array( &$this, 'product_price_html' ), 10, 2 );
@@ -37,6 +38,12 @@ class WC_Sponsorship_Product {
 	function add_product_type( $var, $attr, $content = null ) {
 		$var[ 'sponsorship-project' ] = 'Sponsorship Project';
 		return $var;
+	}
+		
+	function filter_add_to_cart_handler( $type, $product ) {
+		if ( !is_object( $product ) ) $product = new WC_Product_Variable( $product );
+		if ( !WC_Sponsorship::is_sponsorship( $product ) ) return $type;
+		return 'variable';
 	}
 
 	function filter_product_class( $classname, $product_type, $post_type, $product_id ) {
