@@ -193,7 +193,7 @@ if ( is_woocommerce_active() ) {
 		function remove_sponsorship_from_cart() {
 			global $woocommerce;
 
-			foreach ( $woocommerce->cart->cart_contents as $cart_item_key => $cart_item ) if ( WC_Sponsorship_Prodcut::is_sponsorship_contribution_level( $cart_item[ 'product_id' ] ) ) $woocommerce->cart->set_quantity( $cart_item_key, 0 );
+			foreach ( $woocommerce->cart->cart_contents as $cart_item_key => $cart_item ) if ( WC_Sponsorship_Product::is_sponsorship_contribution_level( $cart_item[ 'product_id' ] ) ) $woocommerce->cart->set_quantity( $cart_item_key, 0 );
 		}
 
 		function get_wc_sponsorship_sidebar( $name ) {
