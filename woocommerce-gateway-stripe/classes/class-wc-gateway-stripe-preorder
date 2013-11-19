@@ -1,0 +1,264 @@
+<?php
+
+
+/**
+ * WC_Gateway_Stripe_Subscriptions class.
+ *
+ * @extends WC_Gateway_Stripe
+ */
+class WC_Gateway_Stripe_PreOrder extends WC_Gateway_Stripe {
+
+	function __construct() {
+
+		parent::__construct();
+
+		$this->supports = array( 'products', 'pre-orders' );
+		add_action( 'wc_pre_orders_process_pre_order_completion_payment_' . $this->id, array( $this, 'process_pre_order_payments' ) ); 
+	}
+ function process_payment( $order_id ) {
+		global $woocommerce;
+
+		$order = new WC_Order( $order_id );
+		
+		$stripe_token = isset( $_POST['stripe_token'] ) ? woocommerce_clean( $_POST['stripe_token'] ) : '';
+		
+		if ( WC_Pre_Orders_Order::order_contains_pre_order( $order_id ) ) {
+
+		// the order 
+		if ( WC_Pre_Orders_Order::order_requires_payment_tokenization( $order_id ) ) {
+		
+		// Use Stripe CURL API for payment
+        try {
+			$post_data = array();
+			$customer_id = 0;
+
+			// Check if paying via customer ID
+			if ( isset( $_POST['stripe_customer_id'] ) && $_POST['stripe_customer_id'] !== 'new' ) {
+					$customer_ids = get_user_meta( get_current_user_id(), '_stripe_customer_id', false );
+
+					if ( isset( $customer_ids[ $_POST['stripe_customer_id'] ]['customer_id'] ) ) {
+							$customer_id = $customer_ids[ $_POST['stripe_customer_id'] ]['customer_id'];
+							update_post_meta( $order->id, '_stripe_customer_id', $customer_id );
+					} else {
+							throw new Exception( __( 'Invalid card.', 'wc_stripe' ) );
+					}
+			}
+
+			// Else, Check token
+			elseif ( empty( $stripe_token ) )
+					throw new Exception( __( 'Please make sure your card details have been entered correctly and that your browser supports JavaScript.', 'wc_stripe' ) );
+
+			// Check amount
+			if ( $order->order_total * 100 < 50 )
+					throw new Exception( __( 'Minimum order total is 0.50', 'wc_stripe' ) );
+
+			// Save token if logged in
+			if ( ! $customer_id && $stripe_token ) {
+					$customer_id = $this->add_customer( $order, $stripe_token );
+			}
+
+			// Charge the card OR the customer
+			$post_data['customer']        = $customer_id;
+
+			// Other charge data
+			$post_data['amount']                = $order->order_total * 100; // In cents, minimum amount = 50
+			$post_data['currency']                = strtolower( get_woocommerce_currency() );
+			$post_data['description']        = sprintf( __( '%s - Order %s', 'wp_stripe' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+
+
+			// Make the request
+			// $response = wp_remote_post( $this->api_endpoint . 'v1/charges', array(
+			//		   'method'                => 'POST',
+			//		   'headers' => array(
+			//			'Authorization' => 'Basic ' . base64_encode( $this->secret_key . ':' )
+			//		),
+			//  'body'                         => $post_data,
+			// 'timeout'                 => 70,
+			// 'sslverify'         => false,
+			//	'user-agent'         => 'WooCommerce ' . $woocommerce->version
+			// ));
+
+			// Reduce stock levels
+			$order->reduce_order_stock();
+
+			// Remove cart
+			$woocommerce->cart->empty_cart();
+			
+			WC_Pre_Orders_Order::mark_order_as_pre_ordered( $order );
+
+			// Update status
+			$order->update_status( 'pre-ordered' );
+
+			// Redirect to thank you page
+			return array(
+				'postdata'	=> $post_data,
+				'custid'	=> $customer_id,
+				'result'   => 'success',
+				'redirect' => $this->get_return_url( $order ),
+			);
+		} catch( Exception $e ) {
+				$woocommerce->add_error( __('Error:', 'wc_stripe') . ' "' . $e->getMessage() . '"' );
+				return;
+		}
+		} else {
+
+			// handle pre-orders charged upfront, or paying for a newly-released pre-order with the gateway
+			// process just like regular product
+			return parent::process_payment( $order_id );
+		}
+	}
+	}
+	
+	
+	/**
+	 * Process the payment and return the result
+	 *
+	 * @since 1.0
+	 * @param int $order_id
+	 * @return array
+	 */
+	 function process_pre_order_payments( $order ) {
+		global $woocommerce;
+		if ( ! is_object( $order ) )
+			$order = new WC_Order( $order );
+		
+		// Use Stripe CURL API for payment
+        try {
+			$post_data = array();
+
+
+			$stripe_customer = get_post_meta( $order->id, '_stripe_customer_id', true );
+
+			//die(print_r(get_post_meta( $order->id, '', false )));
+
+			// Check amount
+			if ( $order->order_total * 100 < 50 )
+					throw new Exception( __( 'Minimum order total is 0.50', 'wc_stripe' ) );
+
+			// Charge the card OR the customer
+			$post_data['customer']        = $stripe_customer;
+
+			// Other charge data
+			$post_data['amount']                = $order->order_total * 100; // In cents, minimum amount = 50
+			$post_data['currency']                = strtolower( get_woocommerce_currency() );
+			$post_data['description']        = sprintf( __( '%s - Order %s', 'wp_stripe' ), esc_html( get_bloginfo( 'name' ) ), $order->get_order_number() );
+
+			// Make the request
+			$response = wp_remote_post( $this->api_endpoint . 'v1/charges', array(
+					   'method'                => 'POST',
+					   'headers' => array(
+							'Authorization' => 'Basic ' . base64_encode( $this->secret_key . ':' )
+					),
+				'body'                         => $post_data,
+				'timeout'                 => 70,
+				'sslverify'         => false,
+				'user-agent'         => 'WooCommerce ' . $woocommerce->version
+			));
+			
+			$parsed_response = json_decode( $response['body'] );
+
+                        // Handle response
+                        if ( ! empty( $parsed_response->error ) ) {
+
+                                throw new Exception( $parsed_response->error->message );
+
+                        } elseif ( empty( $parsed_response->id ) ) {
+
+                                throw new Exception( __('Invalid response.', 'wc_stripe') );
+
+                        } else {
+
+                                // Add order note
+                                $order->add_order_note( sprintf( __('Stripe payment completed (Charge ID: %s)', 'wc_stripe' ), $parsed_response->id ) );
+
+                                // Payment complete
+                                $order->payment_complete();
+								
+                        }
+			
+		} catch( Exception $e ) {
+				$woocommerce->add_error( __('Error:', 'wc_stripe') . ' "' . $e->getMessage() . '"' );
+				return;
+		}
+	}
+	
+/**
+         * add_customer function.
+         *
+         * @access public
+         * @param mixed $stripe_token
+         * @return void
+         */
+        function add_customer( $order, $stripe_token ) {
+
+                if ( $stripe_token ) {
+                        $response = $this->stripe_request( array(
+                                'email' => $order->billing_email,
+                                'description' => 'Customer: ' . $order->shipping_first_name . ' ' . $order->shipping_last_name,
+                                'card' => $stripe_token
+                        ), 'customers' );
+
+                        if ( is_wp_error( $response ) ) {
+                                return $response;
+                        } else {
+                                add_user_meta( get_current_user_id(), '_stripe_customer_id', array(
+                                        'customer_id'         => $response->id,
+                                        'active_card'         => $response->active_card->last4,
+                                        'exp_year'            => $response->active_card->exp_year,
+                                        'exp_month'           => $response->active_card->exp_month
+                                ));
+								update_post_meta( $order->id, '_stripe_customer_id', $response->id );
+                                return $response->id;
+                        }
+                }
+
+        }
+		
+		
+		
+		/**
+         * stripe_request function.
+         *
+         * @access public
+         * @param mixed $post_data
+         * @return void
+         */
+        function stripe_request( $request, $api) {
+                global $woocommerce;
+
+                $response = wp_remote_post( $this->api_endpoint . 'v1/' . $api, array(
+                                'method'                => 'POST',
+                                'headers' => array(
+                                'Authorization' => 'Basic ' . base64_encode( $this->secret_key . ':' )
+                        ),
+                        'body'                         => $request,
+                        'timeout'                 => 70,
+                        'sslverify'         => false,
+                        'user-agent'         => 'WooCommerce ' . $woocommerce->version
+                ));
+
+                if ( is_wp_error($response) )
+                        return new WP_Error( 'stripe_error', __('There was a problem connecting to the payment gateway.', 'wc_stripe') );
+
+                if( empty($response['body']) )
+                        return new WP_Error( 'stripe_error', __('Empty response.', 'wc_stripe') );
+
+                $parsed_response = json_decode( $response['body'] );
+
+                // Handle response
+                if ( ! empty( $parsed_response->error ) ) {
+
+                        return new WP_Error( 'stripe_error', $parsed_response->error->message );
+
+                } elseif ( empty( $parsed_response->id ) ) {
+
+                        return new WP_Error( 'stripe_error', __('Invalid response.', 'wc_stripe') );
+
+                }
+
+                return $parsed_response;
+
+        }
+	
+	
+}
